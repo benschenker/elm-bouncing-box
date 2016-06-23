@@ -3,7 +3,7 @@ import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Style exposing (..)
-import Time exposing (Time, second)
+import Time exposing (Time, millisecond)
 
 
 
@@ -21,13 +21,15 @@ main =
 
 
 type alias Model =
-  { top : Int
-  , left : Int
+  { position : Int
+  , points: Int
+  , speed: Int
+  , direction: Int
   }
 
 init : (Model, Cmd Msg)
 init =
-  (Model 100 30, Cmd.none)
+  (Model 30 0 1 1, Cmd.none)
 
 
 
@@ -42,7 +44,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Tick newTime ->
-      ({ model | left = model.left + 10 }, Cmd.none)
+      ({ model | position = model.position + model.speed * model.direction }, Cmd.none)
 
 
 
@@ -52,7 +54,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Time.every second Tick
+  Time.every (100 * millisecond) Tick
 
 
 
@@ -77,8 +79,8 @@ view model =
       , color "white"
       , textAlign "center"
       , position "absolute"
-      , top (px model.top)
-      , left (px model.left)
+      , top (px 100)
+      , left (px model.position)
       ]
   in
       div []
