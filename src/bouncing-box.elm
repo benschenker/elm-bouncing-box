@@ -1,7 +1,7 @@
 import Html exposing (Html, button, div, text)
 import Html.App as Html
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html.Events exposing (onClick)
 import Style exposing (..)
 import Time exposing (Time, millisecond)
 
@@ -38,6 +38,7 @@ init =
 
 type Msg
   = Tick Time
+  | Point
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -45,7 +46,11 @@ update msg model =
   case msg of
     Tick newTime ->
       ({ model | position = model.position + model.speed * model.direction }, Cmd.none)
-
+    Point ->
+      ({ model 
+      | points = model.points + 1
+      , speed = model.speed + 5
+      }, Cmd.none)
 
 
 
@@ -84,5 +89,7 @@ view model =
       ]
   in
       div []
-        [ div [class "box", style boxStyles] []
+        [ div [class "box"
+        , style boxStyles
+        , onClick Point] [ text (toString model.points)]
         ]
