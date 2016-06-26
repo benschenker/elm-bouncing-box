@@ -2,8 +2,10 @@ import Html exposing (Html, button, div, text)
 import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Window exposing (..)
 import Style exposing (..)
 import Time exposing (Time, millisecond)
+-- import Debug  exposing(log)
 
 
 
@@ -25,11 +27,12 @@ type alias Model =
   , points: Int
   , speed: Int
   , direction: Int
+  , viewWidth: Int
   }
 
 init : (Model, Cmd Msg)
 init =
-  (Model 30 0 1 1, Cmd.none)
+  (Model 30 0 1 1 500, Cmd.none)
 
 
 
@@ -45,7 +48,10 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Tick newTime ->
-      ({ model | position = model.position + model.speed * model.direction }, Cmd.none)
+      if model.position > model.viewWidth then
+          ({ model | position = 0}, Cmd.none)
+      else
+        ({ model | position = log "position" model.position + model.speed * model.direction }, Cmd.none)
     Point ->
       ({ model 
       | points = model.points + 1
@@ -70,7 +76,6 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
   let
-    
     boxStyles : List Style
     boxStyles =
       [ backgroundColor "teal"
