@@ -49,9 +49,13 @@ update msg model =
   case msg of
     Tick newTime ->
       if model.position > model.viewWidth then
-          ({ model | position = 0}, Cmd.none)
+        ({ model | direction = -1
+        , position = model.position - model.speed}, Cmd.none)
+      else if model.position < 0 then
+        ({ model | direction = 1
+        , position = model.position + model.speed}, Cmd.none)
       else
-        ({ model | position = log "position" model.position + model.speed * model.direction }, Cmd.none)
+        ({ model | position = model.position + model.speed * model.direction }, Cmd.none)
     Point ->
       ({ model 
       | points = model.points + 1
