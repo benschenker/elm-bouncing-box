@@ -9,9 +9,6 @@ import Time exposing (Time, millisecond)
 import Task
 
 
--- import Debug  exposing(log)
-
-
 main =
     Html.program
         { init = init
