@@ -4,7 +4,7 @@ import Html exposing (Html, button, div, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Window exposing (..)
-import BoxCss exposing (boxCss)
+import BoxCss
 import Time exposing (Time, millisecond)
 import Task
 
@@ -31,9 +31,18 @@ type alias Model =
     }
 
 
+initialModel =
+    { position = 30
+    , points = 0
+    , speed = 1
+    , direction = 1
+    , size = Window.Size 0 0
+    }
+
+
 init : ( Model, Cmd Msg )
 init =
-    ( Model 30 0 1 1 (Window.Size 0 0), Task.perform Resize Window.size )
+    ( initialModel, Task.perform Resize Window.size )
 
 
 
@@ -50,7 +59,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick newTime ->
-            if model.position > model.size.width then
+            if model.position > model.size.width - BoxCss.boxWidth then
                 ( { model
                     | direction = -1
                     , position = model.position - model.speed
@@ -99,7 +108,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ div
-            [ boxCss model
+            [ BoxCss.css model
             , onClick Point
             ]
             [ Html.text (toString model.points) ]
