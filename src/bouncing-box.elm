@@ -4,7 +4,7 @@ import Html exposing (Html, button, div, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Window exposing (..)
-import Css exposing (..)
+import BoxCss exposing (boxCss)
 import Time exposing (Time, millisecond)
 
 
@@ -92,32 +92,10 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    let
-        styles =
-            Css.asPairs >> Html.Attributes.style
-
-        boxStyles =
-            styles
-                [ backgroundColor (hex "#008080")
-                , borderColor (hex "#808080")
-                , borderStyle solid
-                , Css.property "borderWidth" <| toString (px 1)
-                , display block
-                , Css.width (px 50)
-                , Css.height (px 50)
-                , fontSize (pct 200)
-                , color (hex "#000000")
-                , textAlign center
-                , position absolute
-                , top (px 100)
-                , left (px (toFloat model.position))
-                ]
-    in
-        div []
-            [ div
-                [ class "box"
-                , boxStyles
-                , onClick Point
-                ]
-                [ Html.text (toString model.points) ]
+    div []
+        [ div
+            [ boxCss model
+            , onClick Point
             ]
+            [ Html.text (toString model.points) ]
+        ]
