@@ -6,6 +6,7 @@ import Html.Events exposing (onClick)
 import Window exposing (..)
 import BoxCss exposing (boxCss)
 import Time exposing (Time, millisecond)
+import Task
 
 
 -- import Debug  exposing(log)
@@ -29,13 +30,13 @@ type alias Model =
     , points : Int
     , speed : Int
     , direction : Int
-    , viewWidth : Int
+    , size : Window.Size
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model 30 0 1 1 500, Cmd.none )
+    ( Model 30 0 1 1 (Window.Size 0 0), Task.perform Resize Window.size )
 
 
 
@@ -45,13 +46,14 @@ init =
 type Msg
     = Tick Time
     | Point
+    | Resize Window.Size
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick newTime ->
-            if model.position > model.viewWidth then
+            if model.position > model.size.width then
                 ( { model
                     | direction = -1
                     , position = model.position - model.speed
@@ -76,6 +78,9 @@ update msg model =
             , Cmd.none
             )
 
+        Resize newSize ->
+            ( { model | size = newSize }, Cmd.none )
+
 
 
 -- SUBSCRIPTIONS
@@ -83,7 +88,10 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Time.every (100 * millisecond) Tick
+    Sub.batch
+        [ Time.every (100 * millisecond) Tick
+        , Window.resizes Resize
+        ]
 
 
 
