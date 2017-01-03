@@ -22,7 +22,7 @@ css model =
         , Css.width (px boxWidth)
         , Css.height (px 50)
         , fontSize (pct 200)
-        , color (hex "#000000")
+        , color (hex "#FFF")
         , textAlign center
         , position absolute
         , top (px 100)
