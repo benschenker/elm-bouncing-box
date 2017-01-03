@@ -31,6 +31,7 @@ type alias Model =
     }
 
 
+initialModel : Model
 initialModel =
     { position = 30
     , points = 0
